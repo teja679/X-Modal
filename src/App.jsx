@@ -33,14 +33,13 @@ function App() {
       setUserDetails({
         username: '', email: '', phone: '', dob: ''
       });
-      // setShowModal(false);
     }
   };
   const handleClose = (e) => {
-    if (e.target.className === 'modal') setShowModal(false)
+    if (e.target.className === 'modal' || e.target.className === 'container') setShowModal(false)
   }
   return (
-    <main>
+    <main className='container'>
       <h1>User Details Modal</h1>
       <button onClick={() => setShowModal(true)}>Open Form</button>
       {showModal &&
