@@ -36,14 +36,20 @@ function App() {
     }
   };
   const handleClose = (e) => {
-    if (e.target.className === 'modal' || e.target.className === 'container') setShowModal(false)
-  }
+    console.log("Clicked element ID:", e.target.id);
+
+    if (e.target.id === 'root' || e.target.id === 'modal-overlay') {
+      console.log("Closing modal...");
+      setShowModal(false);
+    }
+  };
+
   return (
     <main className='container'>
       <h1>User Details Modal</h1>
       <button onClick={() => setShowModal(true)}>Open Form</button>
       {showModal &&
-        <div className="modal" onClick={handleClose}>
+        <div id="modal-overlay" className="modal" onClick={handleClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
           <div className="modal-content">
             <form onSubmit={handleSubmit} >
               <h2>Fill Details</h2>
