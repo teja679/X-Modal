@@ -7,7 +7,11 @@ function App() {
     username: '', email: '', phone: '', dob: ''
   })
 
-  const isValid = ({ phone, dob }) => {
+  const isValid = ({ email, phone, dob }) => {
+    if (!email.includes('@')) {
+      alert("Invalid email. Please check your email address.")
+      return false;
+    }
     if (phone.trim().length != 10) {
       alert("Invalid phone number. Please enter a 10-digit phone number.")
       return false;
