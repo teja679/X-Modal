@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 function App() {
   const [showModal, setShowModal] = useState(false);
+  const rootRef = useRef(null)
   const [userDetails, setUserDetails] = useState({
     username: '', email: '', phone: '', dob: ''
   })
@@ -35,21 +36,39 @@ function App() {
       });
     }
   };
-  const handleClose = (e) => {
-    console.log("Clicked element ID:", e.target.id);
+  /*  const handleClose = (e) => {
+     e.stopPropagation() 
+     console.log("Clicked element ID:", e.target.id);
+ 
+     if (e.target.id === 'root' || e.target.id === 'modal-overlay') {
+       console.log("Closing modal...");
+       setShowModal(false);
+     }
+   }; */
+  const handleClickOutside = (e) => {
+    const { left, top } = rootRef.current.getBoundingClientRect();
+    const isTopLeft = e.clientX < left + 100 && e.clientY < top + 100;
 
-    if (e.target.id === 'root' || e.target.id === 'modal-overlay') {
-      console.log("Closing modal...");
+    if (isTopLeft || e.target.id === 'modal-overlay') {
       setShowModal(false);
     }
   };
 
+  useEffect(() => {
+    if (showModal) {
+      window.addEventListener('click', handleClickOutside);
+      return () => {
+        window.removeEventListener('click', handleClickOutside);
+      };
+    }
+  }, [showModal]);
+
   return (
-    <main className='container'>
+    <main ref={rootRef} className='container'>
       <h1>User Details Modal</h1>
       <button onClick={() => setShowModal(true)}>Open Form</button>
       {showModal &&
-        <div id="modal-overlay" className="modal" onClick={handleClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div id="modal-overlay" className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
           <div className="modal-content">
             <form onSubmit={handleSubmit} >
               <h2>Fill Details</h2>
