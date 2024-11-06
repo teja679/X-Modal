@@ -1,34 +1,71 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showModal, setShowModal] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    username: '', email: '', phone: '', dob: ''
+  })
 
+  const isValid = ({ phone, dob }) => {
+    if (phone.trim().length != 10) {
+      alert("Invalid phone number. Please enter a 10-digit phone number.")
+      return false;
+    }
+    if (new Date(dob) > new Date()) {
+      alert("Invalid date of birth. Date of birth cannot be in the future.")
+      return false;
+    }
+    return true;
+  }
+  const handleChange = (e) => {
+    const key = e.target.id;
+    const val = e.target.value;
+    setUserDetails({ ...userDetails, [key]: val })
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (isValid(userDetails)) {
+      setUserDetails({
+        username: '', email: '', phone: '', dob: ''
+      });
+      // setShowModal(false);
+    }
+  };
+  const handleClose = (e) => {
+    if (e.target.className === 'modal') setShowModal(false)
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <main>
+      <h1>User Details Modal</h1>
+      <button onClick={() => setShowModal(true)}>Open Form</button>
+      {showModal &&
+        <div className="modal" onClick={handleClose}>
+          <div className="modal-content">
+            <form onSubmit={handleSubmit} >
+              <h2>Fill Details</h2>
+              <div className='form-field'>
+                <label htmlFor='username'>UserName</label>
+                <input type='text' id='username' value={userDetails.username} placeholder='Enter your username' onChange={handleChange} required />
+              </div>
+              <div className='form-field'>
+                <label htmlFor='email'>Email Address</label>
+                <input type='email' id='email' value={userDetails.email} placeholder='Enter your email' onChange={handleChange} required />
+              </div>
+              <div className='form-field'>
+                <label htmlFor='phone'>Phone Number</label>
+                <input type='number' id='phone' value={userDetails.phone} placeholder='Enter your phone number' onChange={handleChange} required />
+              </div>
+              <div className='form-field'>
+                <label htmlFor='dob'>Date of Birth</label>
+                <input type='date' id='dob' value={userDetails.dob} placeholder='dd-mm-yyyy' onChange={handleChange} required />
+              </div>
+              <button className='submit-button' type='submit'>Submit</button>
+            </form>
+          </div>
+        </div>
+      }
+    </main>
   )
 }
 
